@@ -3,4 +3,4 @@
 
 O objetivo desse projeto é enteder e colocar em prática a lógica para fazer uploads de arquivos, sejam imagens, pdf's, etc.
 
-Também aproveitei para testar algumas funcionalidades do git.
+Também aproveitei para testar algumas funcionalidades do git. 🙃
