@@ -11,6 +11,8 @@ app.set('view engine', 'ejs');
 // definindo o local da pasta onde ficarão os arquivos .ejs
 app.set('views', 'src/views');
 
+app.use(express.static('src/uploads'));
+
 // usando o router para gerenciar as rotas
 app.use(router);
 

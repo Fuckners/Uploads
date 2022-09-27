@@ -1,6 +1,6 @@
 import knex from 'knex';
 
-module.exports = knex({
+export default knex({
     client: 'mysql2',
     connection: {
         host: 'localhost',

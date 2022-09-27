@@ -1,6 +1,7 @@
 import { Request as Req, Response as Res, Router } from 'express';
 import multer from 'multer';
 import path from 'path';
+import database from "../database/database";
 
 const router :Router = Router();
 
@@ -40,21 +41,50 @@ const upload = multer({
     }
 });
 
+interface file {
+    id? :number,
+    name :string | undefined,
+    path :string | undefined,
+    type :string | undefined,
+    createdAt :Date | undefined
+}
+
 // rota principal onde o arquivo será selecionado para o upload
-router.get('/', (req :Req, res :Res) => {
+router.get('/', async (req :Req, res :Res) => {
     // res.send('Estou aqui!');
-    res.render('pages/index');
+    const arquivos :Array<file> = await database.select().table('arquivos');
+
+    res.render('pages/index', { arquivos, err: req.query.err });
 });
 
 // rota que efetuará o upload localmente e salvará no banco de dados
-router.post('/upload', upload.single('arquivo1'), (req :Req, res :Res) => {
-    console.log(req.file);
-    res.send('tudo certo.');
+router.post('/upload', (req :Req, res :Res) => {
+    try {
+        upload.single('arquivo1')(req, res, async e => {
+            if (e) {
+                res.redirect('/?err=' + e.message);
+            } else {
+
+                const arquivo :file = {
+                    name: req.file?.originalname,
+                    path: req.file?.path,
+                    type: req.file?.mimetype,
+                    createdAt: new Date()
+                };
+
+                await database.insert(arquivo).table('arquivos');
+                res.redirect('/');
+            }
+    
+        });
+    } catch (error) {
+        res.redirect('/');
+    }
 });
 
 // rota de erro para caso tentem acessar uma rota que não existe
 router.use((req :Req, res :Res) => {
-    res.send('Página not found :(');
+    res.send('Página not found :c');
 });
 
 // exportando o router para ser usado pelo app no server.js

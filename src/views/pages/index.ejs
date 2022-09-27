@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        label {
+            display: block;
+        }
+
+        label > small.err {
+            color: red;
+        }
+    </style>
     <title>Upload!</title>
 </head>
 <body>
@@ -12,16 +21,23 @@
         <label>
             <p>Selecione o arquivo que deseja fazer upload!</p>
             <input type="file" name="arquivo1"><br>
-        </label>
-        <label>
-            <p>Selecione o arquivo que deseja fazer upload!</p>
-            <input type="file" name="arquivo2"><br>
-        </label>
-        <label>
-            <p>Selecione o arquivo que deseja fazer upload!</p>
-            <input type="file" name="arquivo3"><br>
+            <small class="err"><%- err || '&nbsp' %></small>
         </label>
         <button type="submit">Salvar!</button>
     </form>
+
+    <div class="files">
+        <% for (file of arquivos) { %>
+            <div class="file">
+                <a href="<%= file.path.slice(11) %>" download="<%= file.name %>">
+                    <h2><%= file.name %></h2>
+                </a>
+                <p>
+                    <%= `Nome: ${file.name} | tipo: ${file.type}` %>
+                </p>
+                <small><%= file.createdAt %></small>
+            </div>
+        <% } %>
+    </div>
 </body>
 </html>
